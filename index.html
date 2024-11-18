@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f1f1f1;
+        }
+
+        canvas {
+            border: 1px solid #333;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+
+
+    <script>
+        let angle = 0;
+        let cam;
+
+        function setup() {
+            createCanvas(600, 400, WEBGL);
+            cam = createCamera();
+            angleMode(DEGREES);
+        }
+
+        function draw() {
+            background(20);
+
+            // Pencahayaan
+            pointLight(255, 255, 255, 200, -100, 100);
+            ambientLight(60);
+
+            // Pergerakan kamera
+            let radius = 400;
+            let camX = radius * cos(frameCount * 0.5);
+            let camZ = radius * sin(frameCount * 0.5);
+            cam.setPosition(camX, -50, camZ);
+            cam.lookAt(0, 0, 0);
+
+            push();
+            rotateY(angle);
+
+            // Ban luar (tire)
+            push();
+            noStroke();
+            specularMaterial(40); // Warna hitam untuk ban
+            torus(100, 40); // Ukuran ban
+            pop();
+
+            // Velg utama
+            push();
+            specularMaterial(200); // Warna metalik untuk velg
+            torus(100, 10);
+            pop();
+
+            // Pusat velg (hub)
+            push();
+            translate(0, 0, 5);
+            specularMaterial(180);
+            cylinder(30, 20);
+            pop();
+
+            // Jari-jari velg
+            for (let i = 0; i < 6; i++) {
+                push();
+                rotateZ(i * 60);
+                translate(50, 0, 0);
+                specularMaterial(180);
+                box(40, 10, 5);
+                pop();
+            }
+
+            // Baut-baut
+            for (let i = 0; i < 8; i++) {
+                push();
+                rotateZ(i * 45);
+                translate(20, 0, 10);
+                specularMaterial(150);
+                cylinder(5, 10);
+                pop();
+            }
+
+            // Detail pattern ban
+            for (let i = 0; i < 36; i++) {
+                push();
+                rotateZ(i * 10);
+                translate(100, 0, 0);
+                specularMaterial(30);
+                box(20, 5, 40);
+                pop();
+            }
+
+            // Penutup velg (hub cap)
+            push();
+            translate(0, 0, 15);
+            specularMaterial(200);
+            sphere(25);
+            pop();
+
+            pop();
+
+            angle += 1;
+        }
+    </script>
+</body>
+
+</html>
